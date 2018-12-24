@@ -42,10 +42,30 @@ public class WebServer {
     // INNER CLASS - Thread for client connection
     class ConnectionHandler implements Runnable {
 
-        ConnectionHandler(Socket s) throws IOException {
+        private Socket client;
+        private BufferedReader in;
+        private InputStreamReader stream;
+        private DataOutputStream out;
+        private boolean running;
 
+        ConnectionHandler(Socket s) throws IOException {
+            client = s;
+
+            // Assign all connections to client
+            try {
+                out = new DataOutputStream(client.getOutputStream());
+                stream = new InputStreamReader(client.getInputStream());
+                in = new BufferedReader(stream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            running = true;
+
+            // SEND INITIAL FILE HERE
         }
 
+        @Override
         public void run() {
 
         }
