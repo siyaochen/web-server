@@ -6,6 +6,7 @@ public class WebServer {
 
     ServerSocket serverSocket;
     static boolean accepting = true;
+    static final int PORT = 5000;
 
     HashMap<String, String> credentialsList;
 
@@ -16,7 +17,7 @@ public class WebServer {
 
         try {
             // Assign port to server
-            serverSocket = new ServerSocket(5000);
+            serverSocket = new ServerSocket(PORT);
 
             // Loop to accept clients
             while (accepting) {
@@ -37,39 +38,6 @@ public class WebServer {
             }
             System.exit(-1);
         }
-    }
-
-    // INNER CLASS - Thread for client connection
-    class ConnectionHandler implements Runnable {
-
-        private Socket client;
-        private BufferedReader in;
-        private InputStreamReader stream;
-        private DataOutputStream out;
-        private boolean running;
-
-        ConnectionHandler(Socket s) throws IOException {
-            client = s;
-
-            // Assign all connections to client
-            try {
-                out = new DataOutputStream(client.getOutputStream());
-                stream = new InputStreamReader(client.getInputStream());
-                in = new BufferedReader(stream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            running = true;
-
-            // SEND INITIAL FILE HERE
-        }
-
-        @Override
-        public void run() {
-
-        }
-
     }
 
     public static void main(String[] args) {
