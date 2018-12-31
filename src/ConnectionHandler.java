@@ -25,11 +25,11 @@ public class ConnectionHandler implements Runnable {
         running = true;
 
         // SEND INITIAL FILE HERE
-        sendFile("website/index.html");
+        sendFile("index.html");
     }
 
     public void sendFile(String fileName) {
-        File file = new File(fileName);
+        File file = new File("website/" + fileName);
         BufferedInputStream input;
 
         try {
@@ -53,6 +53,7 @@ public class ConnectionHandler implements Runnable {
             out.write(arr, 0, arr.length);
             System.out.println("Sent: " + file.length() + " bytes\n");
             out.flush();
+            input.close();
         } catch (IOException e) {
             System.out.println("Unable to find " + fileName + "\n");
             e.printStackTrace();
@@ -87,10 +88,10 @@ public class ConnectionHandler implements Runnable {
                         if (msg.size() > 0) header = msg.get(0);
                         if (header.length() >= 3 && header.substring(0, 3).equals("GET")) {
                             // Process GET request
-                            new GetHandler(msg);
+                            new GetHandler(header, msg, this);
                         } else if (header.length() >= 4 && header.substring(0, 4).equals("POST")) {
                             // Process POST request
-                            new PostHandler(msg);
+                            new PostHandler(header, msg, this);
                         }
                     }
                 }
@@ -98,6 +99,15 @@ public class ConnectionHandler implements Runnable {
                 System.out.println("Failed to receive message from client.");
                 e.printStackTrace();
             }
+        }
+
+        // Close socket
+        try {
+            in.close();
+            out.close();
+            client.close();
+        } catch (IOException e) {
+            System.out.println("Failed to close socket");
         }
     }
 

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class PostHandler {
 
-    public PostHandler(ArrayList<String> msg) {
+    public PostHandler(String header, ArrayList<String> msg, ConnectionHandler ch) {
 
     }
 
