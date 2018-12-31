@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -28,10 +25,38 @@ public class ConnectionHandler implements Runnable {
         running = true;
 
         // SEND INITIAL FILE HERE
+        sendFile("website/index.html");
     }
 
     public void sendFile(String fileName) {
+        File file = new File(fileName);
+        BufferedInputStream input;
 
+        try {
+            input = new BufferedInputStream(new FileInputStream(file));
+
+            // Convert file to byte array to send
+            System.out.println("File size: " + file.length());
+            byte[] arr = new byte[(int) file.length()];
+
+            // Send file header info
+            out.writeBytes("HTTP/1.1 200 OK" + "\n");
+            out.flush();
+            out.writeBytes("Content-Type: text/html" + "\n");
+            out.flush();
+            out.writeBytes("Content-Length: " + file.length() + "\n\n");
+            out.flush();
+
+            // Read data into byte array and send
+            input.read(arr, 0, (int) file.length());
+            System.out.println("Read: " + file.length() + " bytes");
+            out.write(arr, 0, arr.length);
+            System.out.println("Sent: " + file.length() + " bytes\n");
+            out.flush();
+        } catch (IOException e) {
+            System.out.println("Unable to find " + fileName + "\n");
+            e.printStackTrace();
+        }
     }
 
     @Override
