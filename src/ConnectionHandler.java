@@ -24,7 +24,6 @@ public class ConnectionHandler implements Runnable {
 
         running = true;
 
-        // SEND INITIAL FILE HERE
         sendFile("index.html");
     }
 
@@ -33,6 +32,8 @@ public class ConnectionHandler implements Runnable {
         BufferedInputStream input;
 
         try {
+            System.out.println("Attempting to send " + fileName + "\n");
+
             input = new BufferedInputStream(new FileInputStream(file));
 
             // Convert file to byte array to send
@@ -40,12 +41,12 @@ public class ConnectionHandler implements Runnable {
             byte[] arr = new byte[(int) file.length()];
 
             // Send file header info
-            out.writeBytes("HTTP/1.1 200 OK" + "\n");
+            out.writeBytes("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: " + file.length() + "\r\n");
             out.flush();
-            out.writeBytes("Content-Type: text/html" + "\n");
+            /*out.writeBytes("Content-Type: text/html" + "\n");
             out.flush();
-            out.writeBytes("Content-Length: " + file.length() + "\n\n");
-            out.flush();
+            out.writeBytes("Contentc-Length: " + file.length() + "\n\n");
+            out.flush();*/
 
             // Read data into byte array and send
             input.read(arr, 0, (int) file.length());
