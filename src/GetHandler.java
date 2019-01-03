@@ -1,18 +1,29 @@
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.io.File;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
-public class GetHandler {
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
-    public GetHandler(String header, ArrayList<String> msg, ConnectionHandler ch) {
-        // Parse to find requested file
-        String fileName = header.substring(5, header.indexOf(" HTTP/"));
+public class GetHandler implements HttpHandler {
 
-        // Send file if it exists
-        System.out.println("Requesting " + fileName);
-        if ((new File(fileName)).exists()) ch.sendFile(fileName);
-        else if (fileName.indexOf(".html") != -1) ch.sendFile("404.html");
-        else System.out.println("ERROR: File " + fileName + " cannot be found");
+    @Override
+    public void handle(HttpExchange he) throws IOException {
+        // Parse request
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        URI requestedUri = he.getRequestURI();
+        String query = requestedUri.getRawQuery();
+        HTTPServer.parseQuery(query, parameters);
+
+        // Send response
+        String response = "";
+        for (String key : parameters.keySet()) response += key + " = " + parameters.get(key) + "\n";
+        he.sendResponseHeaders(200, response.getBytes().length);
+        OutputStream os = he.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
 }

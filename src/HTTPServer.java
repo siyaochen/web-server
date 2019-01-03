@@ -2,10 +2,13 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Map;
 
 public class HTTPServer {
 
     static final int PORT = 8000;
+
+    public static void parseQuery(String query, Map<String, Object> parameters) {}
 
     public static void main(String[] args) {
         try {
@@ -15,6 +18,8 @@ public class HTTPServer {
 
             // Add contexts
             server.createContext("/", new InitialHandler());
+            server.createContext("/header", new HeaderHandler());
+            server.createContext("/get", new GetHandler());
 
             server.setExecutor(null);
             server.start();
