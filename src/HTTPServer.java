@@ -1,6 +1,7 @@
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
@@ -8,7 +9,9 @@ public class HTTPServer {
 
     static final int PORT = 8000;
 
-    public static void parseQuery(String query, Map<String, Object> parameters) {}
+    public static void parseQuery(String query, Map<String, Object> parameters) throws UnsupportedEncodingException {
+        if (query != null) { }
+    }
 
     public static void main(String[] args) {
         try {
